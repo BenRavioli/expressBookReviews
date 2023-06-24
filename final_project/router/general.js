@@ -45,10 +45,16 @@ public_users.get('/author/:author',function (req, res) {
   return res.status(200).json({booksByAuthor});
 });
 
-public_users.get('/async/author/:author', async function (req, res) {
-    let booksByAuthor = await new Promise((resolve) =>
-        resolve(books.filter(book => book.author === author));
-    );
+public_users.get('/async/author/:author', function (req, res) {
+    const get_books_by_author = new Promise((resolve, reject) => {
+        let booksByAuthor = [];
+        for(i=1; i <= Object.keys(books).length; i++){
+          if (books[i].author === req.params.author) {
+              booksByAuthor.push(JSON.stringify(books[i]))
+          }
+        };
+        return res.status(200).json({booksByAuthor});
+      });
 });
 
 
@@ -63,7 +69,7 @@ public_users.get('/title/:title',function (req, res) {
     return res.status(200).json({booksByTitle});
 });
 
-//  Get book review 
+//  Get book review
 public_users.get('/review/:isbn',function (req, res) {
     let reviewResults = [];
     reviewResults.push(books[req.params.isbn].reviews);
