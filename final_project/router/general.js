@@ -69,6 +69,18 @@ public_users.get('/title/:title',function (req, res) {
     return res.status(200).json({booksByTitle});
 });
 
+public_users.get('/async/title/:title', function (req, res) {
+  const get_books_by_title = new Promise((resolve, reject) => {
+      let booksByTitle = [];
+      for(i=1; i <= Object.keys(books).length; i++){
+        if (books[i].title === req.params.title) {
+            booksByTitle.push(JSON.stringify(books[i]))
+        }
+      };
+      return res.status(200).json({booksByTitle});
+    });
+});
+
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
     let reviewResults = [];
